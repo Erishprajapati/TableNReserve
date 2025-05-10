@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .forms import CustomUserCreation
+from .forms import CustomUserCreation, ResturantRegister
 import json
 from django.contrib.auth import authenticate, login
 
@@ -28,7 +28,7 @@ def login_user(request):
         try:
             data = json.loads(request.body)
             username = data.get('Name')
-            password = data.get('number')
+            password = data.get('password')
 
             user = authenticate(request, username=username, password=password)
             if user is not None:
@@ -42,6 +42,22 @@ def login_user(request):
     return JsonResponse({'message': 'Send a POST request with user data'}, status=405)
 
 
-        
+"""helps in integration of resturant"""
+@csrf_exempt
+def register_resturant(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            form = ResturantRegister(data)
+            if form.is_valid():
+                resturant = form.save()
+                
+                return JsonResponse({"Message" : "Your resturant has been registered"}, status = 201)
+            else:
+                return JsonResponse({"Errors": form.errors}, status = 400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400) 
+    return JsonResponse({'message': 'Send a POST request with user data'}, status=405)
+
 
     
