@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - TableNReserve{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .register-header h2 {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--primary-color);
+    }
+
+    .form-control {
+        border: 1px solid #ddd;
+        padding: 0.75rem;
+        border-radius: 5px;
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    }
+
+    .btn-register {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        border-radius: 5px;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .btn-register:hover {
+        background-color: #c0392b;
+        color: white;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .login-link a {
+        color: var(--secondary-color);
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-header">
+        <h2>Create an Account</h2>
+        <p class="text-muted">Join TableNReserve to start making reservations</p>
+    </div>
+
+    <form method="POST" action="{% url 'register' %}" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+            <div class="error-message" id="username-error"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+            <div class="error-message" id="email-error"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+            <div class="error-message" id="password-error"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+            <div class="error-message" id="confirm-password-error"></div>
+        </div>
+
+        <button type="submit" class="btn btn-register">Register</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Username validation
+        if (username.value.length < 3) {
+            document.getElementById('username-error').textContent = 'Username must be at least 3 characters long';
+            isValid = false;
+        } else {
+            document.getElementById('username-error').textContent = '';
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+            document.getElementById('email-error').textContent = 'Please enter a valid email address';
+            isValid = false;
+        } else {
+            document.getElementById('email-error').textContent = '';
+        }
+
+        // Password validation
+        if (password.value.length < 8) {
+            document.getElementById('password-error').textContent = 'Password must be at least 8 characters long';
+            isValid = false;
+        } else {
+            document.getElementById('password-error').textContent = '';
+        }
+
+        // Confirm password validation
+        if (password.value !== confirmPassword.value) {
+            document.getElementById('confirm-password-error').textContent = 'Passwords do not match';
+            isValid = false;
+        } else {
+            document.getElementById('confirm-password-error').textContent = '';
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %} 

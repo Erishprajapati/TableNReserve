@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - TableNReserve{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        max-width: 500px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-header h2 {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--primary-color);
+    }
+
+    .form-control {
+        border: 1px solid #ddd;
+        padding: 0.75rem;
+        border-radius: 5px;
+    }
+
+    .form-control:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    }
+
+    .btn-login {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        border-radius: 5px;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .btn-login:hover {
+        background-color: #c0392b;
+        color: white;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .register-link a {
+        color: var(--secondary-color);
+        text-decoration: none;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .forgot-password {
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+
+    .forgot-password a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .forgot-password a:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p class="text-muted">Sign in to continue to TableNReserve</p>
+    </div>
+
+    <form method="POST" action="{% url 'login' %}" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="Name" required>
+            <div class="error-message" id="username-error"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="number" required>
+            <div class="error-message" id="password-error"></div>
+        </div>
+
+        <div class="forgot-password">
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-login">Sign In</button>
+    </form>
+
+    <div class="register-link">
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Username validation
+        if (username.value.trim() === '') {
+            document.getElementById('username-error').textContent = 'Please enter your username';
+            isValid = false;
+        } else {
+            document.getElementById('username-error').textContent = '';
+        }
+
+        // Password validation
+        if (password.value.trim() === '') {
+            document.getElementById('password-error').textContent = 'Please enter your password';
+            isValid = false;
+        } else {
+            document.getElementById('password-error').textContent = '';
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %} 
